@@ -64,6 +64,11 @@ namespace CDreyer.Generics
 
             t.gameObject.SetActive(true);
 
+            if (t is IPoolable<T> poolable)
+            {
+                poolable.OnGet(this);
+            }
+
             return t;
         }
 
@@ -83,6 +88,11 @@ namespace CDreyer.Generics
 
             t.gameObject.SetActive(true);
 
+            if (t is IPoolable<T> poolable)
+            {
+                poolable.OnGet(this);
+            }
+
             return t;
         }
 
@@ -90,6 +100,11 @@ namespace CDreyer.Generics
         {
             obj.gameObject.SetActive(false);
             obj.transform.SetParent(parent);
+
+            if (obj is IPoolable<T> poolable)
+            {
+                poolable.OnRelease();
+            }
 
             q.Enqueue(obj);
         }
@@ -133,6 +148,11 @@ namespace CDreyer.Generics
 
             t.gameObject.SetActive(true);
 
+            if (t is IPoolable<T> poolable)
+            {
+                poolable.OnGet(this);
+            }
+
             return t;
         }
 
@@ -152,6 +172,11 @@ namespace CDreyer.Generics
 
             t.gameObject.SetActive(true);
 
+            if (t is IPoolable<T> poolable)
+            {
+                poolable.OnGet(this);
+            }
+
             return t;
         }
 
@@ -160,10 +185,23 @@ namespace CDreyer.Generics
             obj.gameObject.SetActive(false);
             obj.transform.SetParent(parent);
 
+            if (obj is IPoolable<T> poolable)
+            {
+                poolable.OnRelease();
+            }
+
             s.Push(obj);
         }
     }
     #endregion
 
+    public interface IPoolable<T> where T : Component
+    {
+        public GenericPool<T> Pool { get; set; }
+        public void OnGet(GenericPool<T> pool);
+        public void OnRelease();
+    }
+
     #endregion
 }
+
